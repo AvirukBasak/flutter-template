@@ -1,8 +1,14 @@
+import 'dart:developer';
+
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /* Specify app root widget in runApp */
-void main() => runApp(const MyApp());
+void main() {
+  // debugPaintSizeEnabled = kDebugMode;
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   /* They say it's a convention to provide a parameterized constructor for all
@@ -63,36 +69,87 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.title});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeScreen> createState() => _MsgUiState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  int _counter = 0;
+class _MsgUiState extends State<HomeScreen> {
+  final TextEditingController _textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text(widget.title),
+          title: const Text('Send a Message'),
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Text('You have pushed the button this many times:'),
-              Text(
-                '$_counter',
-                style: Theme.of(context).textTheme.headlineMedium,
+        body: Column(
+          children: [
+            // Empty Space in the middle
+            Expanded(
+              child: Container(
+                // You can add any content or widgets here
+                color: Theme.of(context).colorScheme.background,
+                child: Center(
+                  child: Text(
+                    'Empty space',
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
+                ),
               ),
-            ],
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _incrementCounter,
-          tooltip: 'Increment',
-          child: const Icon(Icons.add),
+            ),
+            const Divider(height: 1.0),
+            // Text Input Field and Send Button at the bottom
+            Container(
+              padding: const EdgeInsets.all(10.0),
+              color: Theme.of(context).colorScheme.background,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.fromLTRB(0, 0, 16.0, 0),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 0.0, horizontal: 15.0),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.onSecondary,
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      child: TextField(
+                        controller: _textController,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter message',
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 0.0, horizontal: 2.0),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius: BorderRadius.circular(100.0),
+                    ),
+                    child: IconButton(
+                      icon: const Icon(Icons.send),
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      onPressed: () => {
+                        if (kDebugMode && _textController.text.isNotEmpty) {
+                          log('send msg: ${_textController.text}'),
+                          _textController.clear(),
+                        }
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
         ),
       );
 
-  void _incrementCounter() => setState(() => ++_counter);
+  @override
+  void dispose() {
+    // Dispose of the text controller to avoid memory leaks
+    _textController.dispose();
+    super.dispose();
+  }
 }
