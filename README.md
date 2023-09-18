@@ -14,3 +14,8 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## Making changes
+- Add your files in `lib/`.
+- Make changes to `lib/main.dart`.
+- Run using IntelliJ IDEA or Android Studio.
